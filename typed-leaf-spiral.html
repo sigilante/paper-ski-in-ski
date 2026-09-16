@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typed-leaf spiral: SKI reduction viewer</title>
+<style>
+:root{
+  --paper:#FFFFFF; --ink:#1F2328; --muted:#5E6570; --rule:#D9DDE2; --field:#F5F6F8;
+  --fn:#3F8F2F; --arg:#2F6FC9; --leaf:#C62828; --var:#7A7F87; --root:#5E6570;
+  --focus:#2F6FC9; --error:#B42318;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1B2027; --ink:#E6E8EB; --muted:#9AA3AE; --rule:#333A44; --field:#232932;
+    --fn:#7CC46A; --arg:#6FA8F0; --leaf:#EF6B5E; --var:#A3A9B1; --root:#9AA3AE;
+    --focus:#6FA8F0; --error:#F97066;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
+main{max-width:960px;margin:0 auto;padding:28px 20px 40px}
+h1{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.2;margin:0 0 6px}
+.lede{color:var(--muted);margin:0 0 20px;max-width:66ch}
+#plot{display:block;width:100%;height:min(68vh,620px);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:14px}
+.row > label{color:var(--muted);min-width:5.5em}
+#term{font-family:var(--serif);font-size:19px;padding:6px 10px;min-width:0;flex:1 1 260px;background:var(--field);color:var(--ink);border:1px solid var(--rule);border-radius:6px}
+#term[aria-invalid="true"]{border-color:var(--error)}
+button{font:inherit;padding:7px 14px;border-radius:6px;border:1px solid var(--rule);background:var(--field);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button.chip{font-family:var(--serif);font-size:16px;padding:3px 10px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+#err{color:var(--error);font-size:13px;min-height:1.4em;margin:6px 0 0 calc(5.5em + 14px)}
+#step{flex:1 1 240px;accent-color:var(--arg)}
+#readout{color:var(--muted);font-variant-numeric:tabular-nums;flex:1 1 100%;margin-left:calc(5.5em + 14px)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:13px;flex:1 1 auto}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+@media (max-width:560px){ #err,#readout{margin-left:0} }
+</style>
+</head>
+<body>
+<main>
+<h1>Typed-leaf spiral</h1>
+<p class="lede">Draws an S, K, I term in the spiral style of Barendregt et al. and reduces it leftmost-outermost. Function edges turn left, argument edges turn right, and each leaf's shape shows which combinator it is. Drag the slider to step through the reduction.</p>
+
+<svg id="plot" role="img" aria-label="Spiral drawing of the current term"></svg>
+
+<div class="row">
+  <label for="term">Term</label>
+  <input id="term" type="text" value="S(SS)SSS(SS(KK))" spellcheck="false" autocomplete="off" aria-describedby="err">
+  <button class="primary" id="draw">Draw term</button>
+</div>
+<div id="err" role="alert"></div>
+
+<div class="row">
+  <label>Examples</label>
+  <button class="chip" data-term="SKKx">SKKx</button>
+  <button class="chip" data-term="SII(SII)">SII(SII)</button>
+  <button class="chip" data-term="SSS(SS)SS">SSS(SS)SS</button>
+  <button class="chip" data-term="S(SS)SSS(SS(KK))">S(SS)SSS(SS(KK))</button>
+  <button class="chip" data-term="SSS(S(SS))KS">SSS(S(SS))KS</button>
+</div>
+
+<div class="row">
+  <label for="step">Step</label>
+  <input id="step" type="range" min="0" max="0" value="0">
+  <span id="readout" aria-live="polite"></span>
+</div>
+
+<div class="row">
+  <label>Key</label>
+  <div class="legend">
+    <span><svg width="26" height="12" aria-hidden="true"><line x1="1" y1="6" x2="25" y2="6" style="stroke:var(--fn)" stroke-width="2.2"/></svg>Function edge</span>
+    <span><svg width="26" height="12" aria-hidden="true"><line x1="1" y1="6" x2="25" y2="6" style="stroke:var(--arg)" stroke-width="1.6"/></svg>Argument edge</span>
+    <span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill:var(--leaf)"/></svg>S</span>
+    <span><svg width="12" height="12" aria-hidden="true"><rect x="2" y="2" width="8" height="8" style="fill:var(--leaf)"/></svg>K</span>
+    <span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="none" style="stroke:var(--leaf)" stroke-width="1.6"/></svg>I</span>
+    <span><svg width="12" height="12" aria-hidden="true"><polygon points="6,1.5 10.5,10 1.5,10" style="fill:var(--var)"/></svg>Variable</span>
+    <span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="none" style="stroke:var(--root)" stroke-width="1.2"/></svg>Root</span>
+  </div>
+  <button id="save">Download SVG</button>
+</div>
+</main>
+
+<script>
+// ---logic---
+// Geometry: edit these to change the look.
+const TURN_FN = 25;      // degrees; function edges turn left (counterclockwise)
+const TURN_ARG = 65;     // degrees; argument edges turn right (clockwise)
+const SHRINK_FN = 0.9;   // length factor passed down the function side
+const SHRINK_ARG = 0.55; // length factor for argument edges and their subtrees
+const BASE_LEN = 10;     // length of the root's function edge, in drawing units
+const MIN_LEN = 0.02;    // subtrees below this edge length are not drawn
+// Limits for the precomputed reduction.
+const MAX_LEAVES = 3000;
+const MAX_STEPS = 200;
+
+const TF = TURN_FN * Math.PI / 180, TA = TURN_ARG * Math.PI / 180;
+const ARITY = { S: 3, K: 2, I: 1 };
+const LIGHT = { fn: '#3F8F2F', arg: '#2F6FC9', leaf: '#C62828', v: '#7A7F87', root: '#5E6570' };
+
+// Terms: a leaf is a one-character string; an application is [function, argument].
+function parse(src) {
+  const pos = [], chars = [];
+  for (let k = 0; k < src.length; k++) if (!/\s/.test(src[k])) { chars.push(src[k]); pos.push(k + 1); }
+  if (!chars.length) throw new Error('Enter a term, for example SKKx.');
+  let i = 0;
+  function seq() {
+    let t = null;
+    while (i < chars.length && chars[i] !== ')') {
+      const c = chars[i];
+      let u;
+      if (c === '(') {
+        const open = i; i++;
+        u = seq();
+        if (chars[i] !== ')') throw new Error(`The parenthesis at position ${pos[open]} is never closed.`);
+        if (u === null) throw new Error(`Empty parentheses at position ${pos[open]}.`);
+        i++;
+      } else if (/[SKIa-z]/.test(c)) {
+        u = c; i++;
+      } else {
+        throw new Error(`"${c}" at position ${pos[i]} is not S, K, I, a lowercase variable, or a parenthesis.`);
+      }
+      t = t === null ? u : [t, u];
+    }
+    return t;
+  }
+  const t = seq();
+  if (i < chars.length) throw new Error(`The ")" at position ${pos[i]} has no matching "(".`);
+  return t;
+}
+
+function spine(t) { const a = []; while (Array.isArray(t)) { a.unshift(t[1]); t = t[0]; } return [t, a]; }
+function build(h, a) { return a.reduce((f, x) => [f, x], h); }
+
+// One leftmost-outermost step. Returns [term, changed].
+function step(t) {
+  const [h, a] = spine(t);
+  const ar = ARITY[h];
+  if (ar && a.length >= ar) {
+    const rest = a.slice(ar);
+    const r = h === 'S' ? [[a[0], a[2]], [a[1], a[2]]] : a[0];
+    return [build(r, rest), true];
+  }
+  for (let j = 0; j < a.length; j++) {
+    const [n, c] = step(a[j]);
+    if (c) { const b = a.slice(); b[j] = n; return [build(h, b), true]; }
+  }
+  return [t, false];
+}
+
+// Leaf count, giving up once it passes cap.
+function size(t, cap) {
+  let n = 0; const st = [t];
+  while (st.length) {
+    const u = st.pop();
+    if (Array.isArray(u)) st.push(u[0], u[1]);
+    else if (++n > cap) return n;
+  }
+  return n;
+}
+
+function show(t) {
+  if (!Array.isArray(t)) return t;
+  const [h, a] = spine(t);
+  return h + a.map(x => Array.isArray(x) ? '(' + show(x) + ')' : x).join('');
+}
+
+// Turtle layout. At an application node with heading th and length L:
+// function edge at th + TURN_FN, length L; its subtree continues with length SHRINK_FN * L.
+// argument edge at th - TURN_ARG, length SHRINK_ARG * L; its subtree continues with that length.
+function geometry(t) {
+  const segs = [], leaves = [];
+  (function walk(u, x, y, th, L) {
+    if (!Array.isArray(u)) { leaves.push({ x, y, k: u, r: Math.max(0.12, Math.min(2.2, 0.3 * L)) }); return; }
+    if (L < MIN_LEN) return;
+    const fa = th + TF, fx = x + L * Math.cos(fa), fy = y - L * Math.sin(fa);
+    const aa = th - TA, aL = L * SHRINK_ARG, ax = x + aL * Math.cos(aa), ay = y - aL * Math.sin(aa);
+    segs.push({ x1: x, y1: y, x2: fx, y2: fy, fn: true });
+    segs.push({ x1: x, y1: y, x2: ax, y2: ay, fn: false });
+    walk(u[0], fx, fy, fa, L * SHRINK_FN);
+    walk(u[1], ax, ay, aa, aL);
+  })(t, 0, 0, Math.PI / 2, BASE_LEN);
+  let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  const ext = (x, y) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); };
+  segs.forEach(s => { ext(s.x1, s.y1); ext(s.x2, s.y2); });
+  leaves.forEach(l => ext(l.x, l.y));
+  return { segs, leaves, x0, y0, w: Math.max(x1 - x0, 8), h: Math.max(y1 - y0, 8) };
+}
+
+function svgBody(g, pal) {
+  const m = Math.max(g.w, g.h), pad = m * 0.08 + 3, span = m + 2 * pad;
+  const swF = span / 320, swA = span / 440;
+  const f = v => +v.toFixed(3);
+  let out = '';
+  for (const s of g.segs) {
+    out += `<line x1="${f(s.x1)}" y1="${f(s.y1)}" x2="${f(s.x2)}" y2="${f(s.y2)}" stroke="${s.fn ? pal.fn : pal.arg}" stroke-width="${f(s.fn ? swF : swA)}" stroke-linecap="round"/>`;
+  }
+  for (const { x, y, k, r } of g.leaves) {
+    if (k === 'S') out += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${pal.leaf}"/>`;
+    else if (k === 'K') out += `<rect x="${f(x - 0.8 * r)}" y="${f(y - 0.8 * r)}" width="${f(1.6 * r)}" height="${f(1.6 * r)}" fill="${pal.leaf}"/>`;
+    else if (k === 'I') out += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.85 * r)}" fill="none" stroke="${pal.leaf}" stroke-width="${f(0.3 * r)}"/>`;
+    else out += `<polygon points="${f(x)},${f(y - r)} ${f(x + 0.9 * r)},${f(y + 0.6 * r)} ${f(x - 0.9 * r)},${f(y + 0.6 * r)}" fill="${pal.v}"/>`;
+  }
+  out += `<circle cx="0" cy="0" r="${f(m * 0.015 + 0.4)}" fill="none" stroke="${pal.root}" stroke-width="${f(swA)}"/>`;
+  const vb = [g.x0 - pad - (span - 2 * pad - g.w) / 2, g.y0 - pad - (span - 2 * pad - g.h) / 2, span, span].map(f);
+  return { body: out, viewBox: vb.join(' ') };
+}
+// ---ui---
+
+const $ = id => document.getElementById(id);
+const plot = $('plot'), termEl = $('term'), errEl = $('err'), stepEl = $('step'), readout = $('readout');
+let states = [], note = '', currentSrc = '';
+
+function themePalette() {
+  const cs = getComputedStyle(document.documentElement);
+  const v = n => cs.getPropertyValue(n).trim();
+  return { fn: v('--fn'), arg: v('--arg'), leaf: v('--leaf'), v: v('--var'), root: v('--root') };
+}
+
+function compute(t) {
+  states = []; note = '';
+  let cur = t;
+  for (let i = 0; i <= MAX_STEPS; i++) {
+    const n = size(cur, MAX_LEAVES);
+    if (n > MAX_LEAVES) { note = `Stopped: step ${i} would exceed ${MAX_LEAVES.toLocaleString()} leaves.`; break; }
+    states.push({ t: cur, n });
+    const [nx, changed] = step(cur);
+    if (!changed) { note = `Normal form reached at step ${i}.`; break; }
+    if (i === MAX_STEPS) { note = `Showing the first ${MAX_STEPS} steps.`; break; }
+    cur = nx;
+  }
+}
+
+function render() {
+  const i = +stepEl.value, s = states[i];
+  const { body, viewBox } = svgBody(geometry(s.t), themePalette());
+  plot.setAttribute('viewBox', viewBox);
+  plot.innerHTML = body;
+  plot.setAttribute('aria-label', `Spiral drawing of step ${i}, ${s.n} leaves`);
+  readout.textContent = `Step ${i} of ${states.length - 1}, ${s.n.toLocaleString()} leaves. ${note}`;
+}
+
+function drawTerm(src, startStep) {
+  let t;
+  try { t = parse(src); }
+  catch (e) { errEl.textContent = e.message; termEl.setAttribute('aria-invalid', 'true'); return; }
+  errEl.textContent = ''; termEl.removeAttribute('aria-invalid');
+  currentSrc = src.replace(/\s+/g, '');
+  compute(t);
+  stepEl.max = states.length - 1;
+  stepEl.value = Math.min(startStep || 0, states.length - 1);
+  render();
+}
+
+function download() {
+  const i = +stepEl.value;
+  const { body, viewBox } = svgBody(geometry(states[i].t), LIGHT);
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="${viewBox}">\n<desc>${show(states[i].t).slice(0, 2000)}</desc>\n${body}\n</svg>\n`;
+  const name = `spiral-${currentSrc.replace(/[()]/g, '_').replace(/[^A-Za-z_]/g, '').slice(0, 40)}-step${i}.svg`;
+  const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+$('draw').addEventListener('click', () => drawTerm(termEl.value, 0));
+termEl.addEventListener('keydown', e => { if (e.key === 'Enter') drawTerm(termEl.value, 0); });
+termEl.addEventListener('input', () => { errEl.textContent = ''; termEl.removeAttribute('aria-invalid'); });
+document.querySelectorAll('button[data-term]').forEach(b =>
+  b.addEventListener('click', () => { termEl.value = b.dataset.term; drawTerm(b.dataset.term, 0); }));
+stepEl.addEventListener('input', render);
+$('save').addEventListener('click', download);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => states.length && render());
+
+drawTerm(termEl.value, 24);
+</script>
+</body>
+</html>

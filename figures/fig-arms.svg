@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 133" width="100%" role="img" aria-label="The two arms of the authored site: errArmAbs, 4 atoms, and errArmOmg, 7 atoms">
+<title>The two arms of the authored site: errArmAbs, 4 atoms, and errArmOmg, 7 atoms</title>
+<rect x="8.0" y="8.0" width="100.0" height="100.0" fill="#FFFFFF" stroke="#444441" stroke-width="0.4"/>
+<g transform="translate(48.081,78.499) scale(4.2989)"><line x1="0.0" y1="0.0" x2="-4.2" y2="-9.1" stroke="#3F8F2F" stroke-width="0.076" stroke-linecap="round"/>
+<line x1="0.0" y1="0.0" x2="5.0" y2="-2.3" stroke="#2F6FC9" stroke-width="0.055" stroke-linecap="round"/>
+<line x1="5.0" y1="-2.3" x2="8.5" y2="-6.5" stroke="#3F8F2F" stroke-width="0.076" stroke-linecap="round"/>
+<line x1="5.0" y1="-2.3" x2="7.3" y2="-0.4" stroke="#2F6FC9" stroke-width="0.055" stroke-linecap="round"/>
+<line x1="7.3" y1="-0.4" x2="10.2" y2="0.4" stroke="#3F8F2F" stroke-width="0.076" stroke-linecap="round"/>
+<line x1="7.3" y1="-0.4" x2="6.9" y2="1.2" stroke="#2F6FC9" stroke-width="0.055" stroke-linecap="round"/>
+<rect x="-5.99" y="-10.82" width="3.52" height="3.52" fill="#C62828"/>
+<rect x="7.33" y="-7.73" width="2.38" height="2.38" fill="#C62828"/>
+<rect x="9.57" y="-0.25" width="1.31" height="1.31" fill="#C62828"/>
+<circle cx="6.87" cy="1.23" r="0.42" fill="none" stroke="#C62828" stroke-width="0.150"/>
+<circle cx="0" cy="0" r="0.66" fill="none" stroke="#444441" stroke-width="0.044"/></g>
+<text x="58.0" y="123.0" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.5" fill="#444441">errArmAbs  4 atoms</text>
+<rect x="116.0" y="8.0" width="100.0" height="100.0" fill="#FFFFFF" stroke="#444441" stroke-width="0.4"/>
+<g transform="translate(152.273,85.747) scale(3.8056)"><line x1="0.0" y1="0.0" x2="-4.2" y2="-9.1" stroke="#3F8F2F" stroke-width="0.087" stroke-linecap="round"/>
+<line x1="0.0" y1="0.0" x2="5.0" y2="-2.3" stroke="#2F6FC9" stroke-width="0.063" stroke-linecap="round"/>
+<line x1="5.0" y1="-2.3" x2="8.5" y2="-6.5" stroke="#3F8F2F" stroke-width="0.087" stroke-linecap="round"/>
+<line x1="5.0" y1="-2.3" x2="7.3" y2="-0.4" stroke="#2F6FC9" stroke-width="0.063" stroke-linecap="round"/>
+<line x1="8.5" y1="-6.5" x2="9.8" y2="-11.3" stroke="#3F8F2F" stroke-width="0.087" stroke-linecap="round"/>
+<line x1="8.5" y1="-6.5" x2="11.1" y2="-5.8" stroke="#2F6FC9" stroke-width="0.063" stroke-linecap="round"/>
+<line x1="9.8" y1="-11.3" x2="9.0" y2="-15.7" stroke="#3F8F2F" stroke-width="0.087" stroke-linecap="round"/>
+<line x1="9.8" y1="-11.3" x2="12.2" y2="-11.7" stroke="#2F6FC9" stroke-width="0.063" stroke-linecap="round"/>
+<line x1="7.3" y1="-0.4" x2="10.2" y2="0.4" stroke="#3F8F2F" stroke-width="0.087" stroke-linecap="round"/>
+<line x1="7.3" y1="-0.4" x2="6.9" y2="1.2" stroke="#2F6FC9" stroke-width="0.063" stroke-linecap="round"/>
+<line x1="10.2" y1="0.4" x2="12.9" y2="-0.1" stroke="#3F8F2F" stroke-width="0.087" stroke-linecap="round"/>
+<line x1="10.2" y1="0.4" x2="10.5" y2="1.9" stroke="#2F6FC9" stroke-width="0.063" stroke-linecap="round"/>
+<rect x="-5.99" y="-10.82" width="3.52" height="3.52" fill="#C62828"/>
+<circle cx="9.03" cy="-15.71" r="1.20" fill="#C62828"/>
+<circle cx="12.21" cy="-11.74" r="0.62" fill="none" stroke="#C62828" stroke-width="0.221"/>
+<circle cx="11.15" cy="-5.83" r="0.69" fill="none" stroke="#C62828" stroke-width="0.245"/>
+<circle cx="12.91" cy="-0.07" r="0.74" fill="#C62828"/>
+<circle cx="10.48" cy="1.88" r="0.38" fill="none" stroke="#C62828" stroke-width="0.135"/>
+<circle cx="6.87" cy="1.23" r="0.42" fill="none" stroke="#C62828" stroke-width="0.150"/>
+<circle cx="0" cy="0" r="0.71" fill="none" stroke="#444441" stroke-width="0.050"/></g>
+<text x="166.0" y="123.0" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.5" fill="#444441">errArmOmg  7 atoms</text>
+</svg>

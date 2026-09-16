@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" width="100%" role="img" aria-label="How whnfF evaluates one term: the fuel loop peels a suc, step walks the spine, dispatches on the head leaf to the S, K or I arm, rebuilds the spine and hands just t' back to the loop, or returns just t as the value when the head is unsaturated, or nothing when fuel runs out; the fifth arm is the authored site">
+<title>How whnfF evaluates one term</title>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#444441"/>
+</marker>
+<marker id="arr-hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#D85A30"/>
+</marker>
+</defs>
+<g font-family="Source Sans 3, Helvetica, Arial, sans-serif" font-size="12" fill="#444441" stroke="#444441" stroke-width="1">
+
+<!-- fuel loop -->
+<rect x="290" y="18" width="180" height="40" rx="3" fill="#FFFFFF"/>
+<text x="380" y="36" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">whnfF n ⟨t⟩</text>
+<text x="380" y="50" text-anchor="middle" stroke="none" font-size="10.5">fuel loop · Y wfGen</text>
+
+<!-- timeout branch, left -->
+<line x1="290" y1="38" x2="150" y2="38" marker-end="url(#arr)"/>
+<text x="220" y="31" text-anchor="middle" stroke="none" font-size="10.5">n = zero</text>
+<rect x="40" y="24" width="110" height="28" rx="14" fill="#FFFFFF"/>
+<text x="95" y="42" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">nothing</text>
+<text x="95" y="66" text-anchor="middle" stroke="none" font-size="10.5">TIMEOUT</text>
+
+<!-- down to step -->
+<line x1="380" y1="58" x2="380" y2="96" marker-end="url(#arr)"/>
+<text x="388" y="80" stroke="none" font-size="10.5">n = suc n′ · one step-attempt</text>
+
+<!-- step -->
+<rect x="290" y="98" width="180" height="40" rx="3" fill="#FFFFFF"/>
+<text x="380" y="116" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">step ⟨t⟩</text>
+<text x="380" y="130" text-anchor="middle" stroke="none" font-size="10.5">one contraction, as data</text>
+
+<!-- down to sp -->
+<line x1="380" y1="138" x2="380" y2="176" marker-end="url(#arr)"/>
+
+<!-- spine walk -->
+<rect x="250" y="178" width="260" height="46" rx="3" fill="#FFFFFF"/>
+<text x="380" y="196" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">sp ⟨t⟩ nil</text>
+<text x="380" y="212" text-anchor="middle" stroke="none" font-size="10.5">walks to the head leaf, pushing each argument onto a list</text>
+
+<!-- dispatch fan -->
+<line x1="300" y1="224" x2="150" y2="286" marker-end="url(#arr)"/>
+<line x1="350" y1="224" x2="300" y2="286" marker-end="url(#arr)"/>
+<line x1="410" y1="224" x2="450" y2="286" marker-end="url(#arr)"/>
+<line x1="460" y1="224" x2="610" y2="286" marker-end="url(#arr-hot)" stroke="#D85A30" stroke-dasharray="4 3"/>
+<text x="380" y="262" text-anchor="middle" stroke="none" font-size="10.5">dispatch on the head leaf</text>
+
+<!-- arms -->
+<rect x="90" y="288" width="120" height="44" rx="3" fill="#FFFFFF"/>
+<text x="150" y="306" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">stepS</text>
+<text x="150" y="322" text-anchor="middle" stroke="none" font-size="10.5">x z (y z) · needs 3 args</text>
+
+<rect x="240" y="288" width="120" height="44" rx="3" fill="#FFFFFF"/>
+<text x="300" y="306" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">stepK</text>
+<text x="300" y="322" text-anchor="middle" stroke="none" font-size="10.5">x · drops y · needs 2</text>
+
+<rect x="390" y="288" width="120" height="44" rx="3" fill="#FFFFFF"/>
+<text x="450" y="306" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">stepI</text>
+<text x="450" y="322" text-anchor="middle" stroke="none" font-size="10.5">x · needs 1</text>
+
+<rect x="540" y="288" width="150" height="44" rx="3" fill="#FFFFFF" stroke="#D85A30" stroke-dasharray="4 3"/>
+<text x="615" y="306" text-anchor="middle" stroke="none" fill="#D85A30" font-family="IBM Plex Mono, Menlo, monospace">5th arm · Err / Scry</text>
+<text x="615" y="322" text-anchor="middle" stroke="none" fill="#D85A30" font-size="10.5">the authored site</text>
+
+<!-- saturated: rebuild -->
+<line x1="150" y1="332" x2="150" y2="372" marker-end="url(#arr)"/>
+<line x1="300" y1="332" x2="300" y2="372" marker-end="url(#arr)"/>
+<line x1="450" y1="332" x2="450" y2="372" marker-end="url(#arr)"/>
+<text x="160" y="356" stroke="none" font-size="10.5">saturated</text>
+
+<rect x="90" y="374" width="420" height="40" rx="3" fill="#FFFFFF"/>
+<text x="300" y="392" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">rb ⟨t′⟩ rest  →  just ⟨t′⟩</text>
+<text x="300" y="406" text-anchor="middle" stroke="none" font-size="10.5">re-applies the untouched arguments to the contracted head</text>
+
+<!-- back to the loop, right side -->
+<path d="M 510 394 L 735 394 L 735 38 L 472 38" fill="none" marker-end="url(#arr)"/>
+<text x="742" y="220" stroke="none" font-size="10.5" transform="rotate(-90 742 220)" text-anchor="middle">just ⟨t′⟩ · loop with n′</text>
+
+<!-- unsaturated: done -->
+<path d="M 90 310 L 70 310 L 70 142" fill="none" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+<text x="76" y="230" stroke="none" font-size="10.5" transform="rotate(-90 76 230)" text-anchor="middle">any arm, head unsaturated</text>
+<rect x="14" y="100" width="112" height="40" rx="3" fill="#FFFFFF"/>
+<text x="70" y="116" text-anchor="middle" stroke="none" font-family="IBM Plex Mono, Menlo, monospace">just ⟨t⟩</text>
+<text x="70" y="131" text-anchor="middle" stroke="none" font-size="10.5">⟨t⟩ is WHNF · VALUE</text>
+
+<!-- fifth arm outcomes -->
+<text x="615" y="356" text-anchor="middle" stroke="none" fill="#D85A30" font-size="10.5">errd · Ω · E p ↦ hit / miss / not yet</text>
+<text x="615" y="372" text-anchor="middle" stroke="none" fill="#D85A30" font-size="10.5">(exposed, absorbed, or asked of an oracle)</text>
+</g>
+</svg>
