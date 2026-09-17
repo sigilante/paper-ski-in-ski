@@ -129,7 +129,7 @@
 <rect x="6.20" y="2.77" width="0.19" height="0.19" fill="#C62828"/>
 <rect x="5.75" y="1.17" width="0.44" height="0.44" fill="#C62828"/>
 <circle cx="0" cy="0" r="0.99" fill="none" stroke="#444441" stroke-width="0.089"/></g>
-<text x="58.0" y="123.0" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.5" fill="#444441">UQ · spiral · 43 of 43 atoms</text>
+<text x="58.0" y="121.2" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.75" fill="#444441">UQ</text>
 <rect x="116.0" y="8.0" width="100.0" height="100.0" fill="#FFFFFF" stroke="#444441" stroke-width="0.4"/>
 <g transform="translate(166.000,58.000) scale(1.9455)"><line x1="0.00" y1="0.00" x2="1.45" y2="-1.66" stroke="#3F8F2F" stroke-width="0.389" stroke-linecap="round"/>
 <line x1="1.45" y1="-1.66" x2="0.68" y2="-4.35" stroke="#3F8F2F" stroke-width="0.389" stroke-linecap="round"/>
@@ -259,7 +259,7 @@
 <rect x="-6.66" y="-19.92" width="1.92" height="1.92" fill="#C62828"/>
 <rect x="-2.24" y="-9.67" width="1.92" height="1.92" fill="#C62828"/>
 <circle cx="0" cy="0" r="1.08" fill="none" stroke="#444441" stroke-width="0.389"/></g>
-<text x="166.0" y="123.0" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.5" fill="#444441">UQ · every atom · 43</text>
+<text x="166.0" y="121.2" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.75" fill="#444441">UQ</text>
 <rect x="224.0" y="8.0" width="100.0" height="100.0" fill="#FFFFFF" stroke="#444441" stroke-width="0.4"/>
 <g transform="translate(288.056,81.728) scale(1.9452)"><line x1="0.0" y1="0.0" x2="-4.2" y2="-9.1" stroke="#3F8F2F" stroke-width="0.181" stroke-linecap="round"/>
 <line x1="0.0" y1="0.0" x2="5.0" y2="-2.3" stroke="#2F6FC9" stroke-width="0.130" stroke-linecap="round"/>
@@ -380,7 +380,7 @@
 <rect x="9.61" y="2.15" width="0.40" height="0.40" fill="#C62828"/>
 <rect x="6.47" y="0.83" width="0.80" height="0.80" fill="#C62828"/>
 <circle cx="0" cy="0" r="1.10" fill="none" stroke="#444441" stroke-width="0.104"/></g>
-<text x="274.0" y="123.0" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.5" fill="#444441">&lt;I K&gt; · spiral · 40 of 40 atoms</text>
+<text x="274.0" y="121.2" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.75" fill="#444441">&lt;I K&gt;</text>
 <rect x="332.0" y="8.0" width="100.0" height="100.0" fill="#FFFFFF" stroke="#444441" stroke-width="0.4"/>
 <g transform="translate(382.000,58.000) scale(1.5480)"><line x1="-0.00" y1="0.00" x2="0.16" y2="2.19" stroke="#3F8F2F" stroke-width="0.500" stroke-linecap="round"/>
 <line x1="0.16" y1="2.19" x2="3.68" y2="-2.41" stroke="#3F8F2F" stroke-width="0.500" stroke-linecap="round"/>
@@ -501,5 +501,5 @@
 <rect x="-4.36" y="-11.42" width="1.92" height="1.92" fill="#C62828"/>
 <rect x="-1.99" y="-7.48" width="1.92" height="1.92" fill="#C62828"/>
 <circle cx="0" cy="0" r="1.08" fill="none" stroke="#444441" stroke-width="0.500"/></g>
-<text x="382.0" y="123.0" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.5" fill="#444441">&lt;I K&gt; · every atom · 40</text>
+<text x="382.0" y="121.2" text-anchor="middle" font-family="IBM Plex Mono, Menlo, monospace" font-size="7.75" fill="#444441">&lt;I K&gt;</text>
 </svg>

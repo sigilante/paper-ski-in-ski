@@ -131,12 +131,20 @@ def single(term, title, path):
     return n
 
 
-def strip(panels, path, aria, cell=100.0, gap=8.0, label_h=17.0, render=None):
+TEXT_WIDTH_PT = 454.0   # the paper's \linewidth (letter, 1.1in margins); figures are set at this width
+
+
+def strip(panels, path, aria, cell=100.0, gap=8.0, render=None,
+          label_pt=8.0, label_font="IBM Plex Mono, Menlo, monospace"):
     """Several panels in a row, each scaled to fill a square cell (leaf sizes
     are therefore not comparable across panels, as the brief notes).
     panels: list of (term, label, prune[, renderer])."""
     n = len(panels)
     W = n * cell + (n + 1) * gap
+    # font-size is in viewBox units; convert the requested PRINT size (points,
+    # when the figure is set at TEXT_WIDTH_PT) into units for this figure
+    fs = label_pt * W / TEXT_WIDTH_PT
+    label_h = 2.2 * fs
     H = cell + 2 * gap + label_h
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:.0f} {H:.0f}" width="100%" '
            f'role="img" aria-label="{esc(aria)}">', f'<title>{esc(aria)}</title>']
@@ -153,8 +161,8 @@ def strip(panels, path, aria, cell=100.0, gap=8.0, label_h=17.0, render=None):
         out.append(f'<rect x="{cx:.1f}" y="{gap:.1f}" width="{cell:.1f}" height="{cell:.1f}" '
                    f'fill="#FFFFFF" stroke="{INK}" stroke-width="0.4"/>')
         out.append(f'<g transform="translate({ox:.3f},{oy:.3f}) scale({s:.4f})">{frag}</g>')
-        out.append(f'<text x="{cx + cell/2:.1f}" y="{gap + cell + label_h - 2:.1f}" text-anchor="middle" '
-                   f'font-family="IBM Plex Mono, Menlo, monospace" font-size="{7.5 if len(panels) <= 4 else 6.2}" fill="{INK}">{esc(label)}</text>')
+        out.append(f'<text x="{cx + cell/2:.1f}" y="{gap + cell + label_h - 0.5*fs:.1f}" text-anchor="middle" '
+                   f'font-family="{label_font}" font-size="{fs:.2f}" fill="{INK}">{esc(label)}</text>')
     out.append("</svg>")
     open(path, "w").write("\n".join(out) + "\n")
     return counts
@@ -255,10 +263,10 @@ def main():
     # ---- the terms themselves
     IK = App(I, K)
     for term, title, fn in [
-        (UP, "UQ, the unquoter, 43 atoms", "fig-term-uq.svg"),
-        (WP, "whnfF, the emulator, 618 atoms", "fig-term-whnff.svg"),
-        (EQ5, "EQ5, structural equality on encoded paths, 240 atoms", "fig-term-eq5.svg"),
-        (encP(IK), "the encoded datum <I K>, 40 atoms", "fig-term-enc-ik.svg"),
+        (UP, "UQ", "fig-term-uq.svg"),
+        (WP, "whnfF", "fig-term-whnff.svg"),
+        (EQ5, "EQ5", "fig-term-eq5.svg"),
+        (encP(IK), "the encoded datum <I K>", "fig-term-enc-ik.svg"),
     ]:
         n = single(term, title, f"figures/{fn}")
         rep.append((fn, tree_size(term), n))
@@ -271,8 +279,8 @@ def main():
     def pair_panels(term, name):
         n_all = tree_size(term)
         n_vis = len(layout(term)[1])
-        return [(term, f"{name} · spiral · {n_vis} of {n_all} atoms", PRUNE),
-                (term, f"{name} · every atom · {n_all}", PRUNE, radial_frag)]
+        return [(term, f"{name}", PRUNE),
+                (term, f"{name}", PRUNE, radial_frag)]
     c = strip(pair_panels(WP, "whnfF"), "figures/fig-pair-whnff.svg",
               "whnfF, the emulator: spiral view beside the every-atom disc, 618 atoms")
     rep.append(("fig-pair-whnff.svg", 618, c))
@@ -299,7 +307,8 @@ def main():
         panels.append((t, f"{name} · {tree_size(t)}", PRUNE))
     c = strip(panels, "figures/fig-engine-parts.svg",
               "The interpreter's components as terms, every atom drawn: sp 126, rb 74, stepI 92, stepK 105, stepS 237, UQ 43 atoms",
-              render=radial_frag)
+              render=radial_frag,
+              label_pt=10.0)
     rep.append(("fig-engine-parts.svg", [tree_size(p[0]) for p in panels], c))
 
     # ---- the engine in motion: whnfF 3 <I K>, the T0 target, at chosen steps
@@ -311,7 +320,8 @@ def main():
         term = r.term if n else t0
         panels.append((term, f"step {n}", 0.12))   # coarser pruning: these trees reach 1e5 leaves
     c = strip(panels, "figures/fig-engine-motion.svg",
-              "The emulator running: whnfF 3 <I K> after 0, 20, 60, 120, 200, 300 and 340 host contractions")
+              "The emulator running: whnfF 3 <I K> after 0, 20, 60, 120, 200, 300 and 340 host contractions",
+              label_pt=10.0)
     rep.append(("fig-engine-motion.svg", steps, c))
 
     for fn, atoms, drawn in rep:
