@@ -94,6 +94,15 @@ threads, or what the driver does with the outcome.
     in the Black/Purple sense (Amin & Rompf §6 to §7). *Change:* thread the
     state into the oracle call in `stepScQ1`; the oracle's type grows.
 
+11. **A subject-oriented surface language.** Hoon's layering over Nock,
+    reproduced over SKI: Scott pairs as cells with Nock axes, cores tied
+    with `Y`, wings resolved at compile time, and a quotation line fixed
+    by the paper's Proposition 3.1 rather than chosen. Internalizes the
+    resolver's namespace (item 8's driver) as a core, and supplies the
+    bracket-abstraction combinator item 8's Stage 4 needs. Designed in
+    `~/SKIjack/SURFACE-LANGUAGE-DESIGN.md`, with the runtime in
+    `~/SKIjack/RUNTIME-DESIGN.md`; a separate repository and paper.
+
 ## Not recommended
 
 - **Full CPS resume** (`SCRY-BLOCKING-DESIGN.md` option (c)): a different
