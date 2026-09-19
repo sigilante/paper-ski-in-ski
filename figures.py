@@ -30,10 +30,11 @@ Outputs (figures/):
                            global shape and the tidy tree shows the term.
 
 Usage:
-    python3 figures.py
+    python3 figures.py        # writes figures/*.svg, then build/fig/*.pdf (via rsvg-convert)
+                              # for every SVG in figures/, including the hand-drawn mechanism diagram
 """
 from __future__ import annotations
-import sys, math, os, threading, io, contextlib
+import sys, math, os, threading, io, contextlib, glob, shutil, subprocess
 from html import escape as esc
 
 sys.setrecursionlimit(10_000_000)
@@ -281,14 +282,17 @@ def main():
         n_vis = len(layout(term)[1])
         return [(term, f"{name}", PRUNE),
                 (term, f"{name}", PRUNE, radial_frag)]
-    c = strip(pair_panels(WP, "whnfF"), "figures/fig-pair-whnff.svg",
-              "whnfF, the emulator: spiral view beside the every-atom disc, 618 atoms")
+    c = strip(pair_panels(WP, ""), "figures/fig-pair-whnff.svg",
+              "whnfF, the emulator: spiral view beside the every-atom disc, 618 atoms",
+              label_pt=10.0)
     rep.append(("fig-pair-whnff.svg", 618, c))
     c = strip(pair_panels(EQ5, "EQ5"), "figures/fig-pair-eq5.svg",
-              "EQ5, structural equality on encoded paths: spiral view beside the every-atom disc, 240 atoms")
+              "EQ5, structural equality on encoded paths: spiral view beside the every-atom disc, 240 atoms",
+              label_pt=10.0)
     rep.append(("fig-pair-eq5.svg", 240, c))
     c = strip(pair_panels(UP, "UQ") + pair_panels(encP(IK), "<I K>"), "figures/fig-pair-uq-ik.svg",
-              "UQ, the unquoter (43 atoms), and the datum <I K> it decodes (40 atoms), each in spiral and every-atom views")
+              "UQ, the unquoter (43 atoms), and the datum <I K> it decodes (40 atoms), each in spiral and every-atom views",
+              label_pt=10.0)
     rep.append(("fig-pair-uq-ik.svg", "43 / 40", c))
 
     # ---- the one-site diff, side by side
@@ -326,6 +330,23 @@ def main():
 
     for fn, atoms, drawn in rep:
         print(f"{fn:26s} atoms={atoms}  leaves drawn={drawn}  bytes={os.path.getsize('figures/'+fn):,}")
+    to_pdf()
+
+
+def to_pdf(src_dir="figures", out_dir="build/fig"):
+    """Convert every SVG in figures/ (generated or hand-drawn) to the PDF the
+    manuscript includes via \\includegraphics{build/fig/NAME.pdf}. Skips
+    files whose PDF is newer than the SVG. Needs rsvg-convert."""
+    if shutil.which("rsvg-convert") is None:
+        print("rsvg-convert not found: SVGs written, PDFs NOT regenerated"); return
+    os.makedirs(out_dir, exist_ok=True)
+    done = 0
+    for svg in sorted(glob.glob(os.path.join(src_dir, "*.svg"))):
+        pdf = os.path.join(out_dir, os.path.basename(svg)[:-4] + ".pdf")
+        if os.path.exists(pdf) and os.path.getmtime(pdf) >= os.path.getmtime(svg):
+            continue
+        subprocess.run(["rsvg-convert", "-f", "pdf", "-o", pdf, svg], check=True); done += 1
+    print(f"PDFs: {done} regenerated in {out_dir}/ ({len(glob.glob(os.path.join(src_dir, '*.svg')))} SVGs)")
 
 
 if __name__ == "__main__":
