@@ -3,7 +3,11 @@ __pycache__/
 .ipynb_checkpoints/
 
 # LaTeX build artifacts
-build/
+build/*
+# ...but the figure PDFs are needed to build mss.tex from a clean clone.
+!build/fig/
+build/fig/*
+!build/fig/*.pdf
 *.aux
 *.bbl
 *.blg
