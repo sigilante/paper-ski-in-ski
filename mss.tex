@@ -56,7 +56,7 @@
 \author{N. E. Davis}
 \orcid{0000-0002-1131-8319}
 \affiliation{%
-  \institution{Independent Researcher}
+  \institution{ZeroAttest}
   \city{Champaign, Illinois}
   \country{United States of America}
   \authoremail{neal.davis@protonmail.com}
@@ -65,24 +65,28 @@
 \begin{document}
 
 \begin{abstract}
-A symbol added to an object language may carry a meaning as supplied
-by an interpreter. We make such authorship visible in a metacircular
-self-interpreter for the $SKI$ combinatory calculus written as a
-closed term of the basis $\{S, K, I\}$ weighing in at 618 atoms,
+We author a metacircular self-interpreter for the $SKI$ combinatory
+calculus, explicitly introducing symbols within the object
+language.  This interpreter is represented as a
+closed term of the basis $\{S, K, I\}$ (three leaves plus application) weighing in at 618 atoms,
 which runs on an encoding of itself in 504,930 contractions. Extending
-the object language with a fifth symbol forces the interpreter's result
+the object language with a fifth symbol (a leaf with no contraction rule) forces the interpreter's result
 type to grow, and whether the new outcome is exposed as a value or
 absorbed into divergence is decided by a single arm of the interpreter.
 The same site, made a parameter, becomes a nonlocal lookup in the style
-of a peek into a namespace: the resolver is passed as an
+of a peek into an append-only namespace: the resolver is passed as an
 argument, a lookup may block, and a namespace of answers accumulates
 across re-runs, keyed by a 240-atom structural equality check on encoded
-paths. Two structural results frame the construction. A census over the
+paths. The loop is fueled, and we prove it adequate: a budget of $k$
+admits exactly the terms reaching weak head normal form in fewer than
+$k$ contractions, so the least adequate budget is one more than the
+number of contractions and the answer is otherwise independent of the
+budget. Two further structural results frame the construction. A census over the
 $\{B, C, K, W\}$ basis shows that representation needs weakening, that
 iteration needs contraction, and that contraction alone already costs
-normalization. Finally, no $SKI$ term can perform quotation of
-a live term; above that boundary everything, including metacircular
-evaluation, is closed.
+normalization. Finally, no $SKI$ term quotes \emph{every} live term; on the encoded
+side of that boundary everything, including metacircular evaluation, is
+closed.
 \end{abstract}
 
 \maketitle
@@ -169,8 +173,8 @@ originally intended as a ``hyper-Turing'' operator \citep{Davis2025},
 in which a query for a referentially transparent value could answer,
 refuse permanently, or defer.
 
-The tower as such entered with \citet{Smith1984}, whose 3-Lisp runs each
-level of a reflective tower on an interpreter at the level above;
+The reflective tower as such was introduced by \citet{Smith1984}; their 3-Lisp runs each
+level of a reflective tower on an interpreter at the level above.
 \citet{WandFriedman1988} gave the tower a non-reflective description, and
 \citet{Asai1996} defined the language Black (in whose style
 \citeauthor{AminRompf2018}'s Purple is cast).  \citet{AminRompf2018}
@@ -191,7 +195,8 @@ rather than computed. The present work complements their approach. We
 retain the levels with payment (\S\ref{sec:mock}), and we ask what an
 interpreter does in the case where its object language gains a construct
 whose meaning the interpreter must author (\S\ref{sec:authored}); this
-question does not arise in a setting without a third outcome. The two
+question does not arise in a setting without a third outcome (that is,
+beyond the value or divergence $\bot$). The two
 share the shape of the mechanism:  an interpreter as an ordinary program
 in the calculus it interprets, with one place at which its behaviour is
 substituted.  \S\ref{sec:scry} builds upon this foundation.
@@ -221,7 +226,7 @@ built a typed one, in a combinatory calculus with a factorisation
 operator though not in $\{S,K\}$. (In particular, their distinction
 between self-\emph{recognisers}, which recover a term from its
 representation, and self-\emph{enactors}, which execute it, is
-necessary here.) The closest prior construction for $SK$ is
+necessary here.) The closest prior construction for $SK$ is that of
 \citet{Tromp2006}, whose Theorem~3 gives a $\lambda$-term $F$ of size
 124 with $F\,C\,(\tilde M : N) = C\,M\,N$ for a bitstring encoding
 $\tilde M$ of a combinator $M$, and whose Theorem~4 translates it into
@@ -235,8 +240,8 @@ relation that differs from the host's, which is what we carry out in
 symbolic normal-form reducer over Scott-encoded de Bruijn terms for the
 $\lambda$-calculus, used only as a size constant.
 
-Two features of the combinatory setting separate this construction from
-its $\lambda$-calculus relatives.
+Two features of the combinatory setting separate the current construction
+from its $\lambda$-calculus relatives.
 The first is a simplification: with no binders there is no
 $\alpha$-equivalence, no capture and no de Bruijn apparatus, so an
 encoding of syntax is an encoding of a binary tree over three leaves and
@@ -245,42 +250,54 @@ not arise here.  The second, obstruction, pulls in the other direction.
 In the $\lambda$-calculus, quotation of a live term is
 unavailable because the coding is a metalevel operation
 \citep{Barendregt1991}; here
-\emph{factorisation} of a live term is not representable at all
-\citep{JayGivenWilson2011}, so a term cannot discover whether its
+\emph{factorisation} of a live term is not representable at
+all~\mbox{\citep{JayGivenWilson2011}}, so a term cannot discover whether its
 argument is an application, let alone recover its parts.  What a
 $\lambda$-calculus self-interpreter may take from the structure of what
 it is handed, an $SKI$ interpreter must be given as data.
 The construction here is a step relation over an encoding rather than a
-decoder in the manner of \citet{Tromp2006}, and it makes the
-authored site of \S\ref{sec:authored} possible: once the step relation
+decoder in the manner of \citet{Tromp2006}, which facilitates the
+authored site of \S\ref{sec:authored}: once the step relation
 is data, a rule may be written that the host does not have.
 
-Our novelty is narrow; a symbolic step-evaluator for $SKI$ in
-the $\lambda$-calculus is a textbook exercise, and bracket abstraction
-carries it into $\{S,K,I\}$ mechanically.  We contribute a
-concrete fueled expression of 618 atoms with its step rules as data
-manipulation rather than re-spliced host syntax, applied to an encoding
-of itself and run to completion.  On top of this we add a census
-(\S\ref{sec:census}), the one-site authorship and faithfulness lemma
-(\S\ref{sec:authored}), and the substitutable, blocking, compound-path
-lookup (\S\ref{sec:scry}), which we have not found elsewhere.
-(\citeauthor{AminRompf2018}'s outcome space has no failure case;
-\citeauthor{JayGivenWilson2011}'s result concerns the
-limitations of $SK$ over live terms rather than what an interpreter
-can choose to expose.)
+Each ingredient of this construction has a precedent.  A symbolic
+step-evaluator for $SKI$ in the $\lambda$-calculus is a textbook
+exercise in a computer science curriculum,
+and bracket abstraction carries it into $\{S,K,I\}$
+mechanically; censuses of combinator bases are old; fuel is the standard
+device for making divergence observable.  What we have not found
+elsewhere is the combination.  Our interpreter is a concrete closed
+term of 618 atoms whose
+step rules are data rather than re-spliced host syntax, which permits
+a rule the host does not have to be written at
+all.  With this in hand, the authorship of a symbol's semantics
+localizes to a single arm (Lemma~\ref{lem:faithful}).  Making the same
+arm into a parameter turns the interpreter into a namespace with
+blocking and replay (\S\ref{sec:scry}).  A census (\S\ref{sec:census})
+locates what each of these facilities costs in the carrying calculus.
+\citeauthor{AminRompf2018}'s value domain consists of four constructors,
+all of them values \citep[p.~6]{AminRompf2018}; a mismatched
+elimination form is a metalanguage error, not an outcome their
+semantics represents. A closed ${S,K,I}$ term has no metalanguage to
+fail into, so every outcome it admits must be represented in the object
+language---first the timeout made observable by fuel (\S\ref{sec:fuel}),
+then, once the object language is extended, a failure
+(\S\ref{sec:authored}).  \citeauthor{JayGivenWilson2011}'s result
+concerns the limitations of $SKI$ over live terms rather than what an
+interpreter may choose to expose; it is what bounds reification here
+(\S\ref{sec:boundary}).
 
 \section{The interpreter}\label{sec:interp}
 
 \subsection{Encoding and construction}\label{sec:construction}
 
-The $\{S,K,I\}$ terms are the object language of the interpreter; in
-the terminology of \citet{Smullyan1985} the standard definitions are:
+The $\{S,K,I\}$ terms are the object language of the interpreter; the
+standard definitions are:
 \begin{align*}
-\text{Idiot bird,}\;I & = \lambda x.x \\
-\text{Kestrel,}\;K & = \lambda x.\lambda y.x \\
-\text{Starling,}\;S & = \lambda x.\lambda y.\lambda z.x\,z\,(y\,z)
+I & = \lambda x.x \\
+K & = \lambda x.\lambda y.x \\
+S & = \lambda x.\lambda y.\lambda z.x\,z\,(y\,z)
 \end{align*}
-
 Object terms are represented by Scott encoding
 \citep{Scott1962,Jansen2013}, in which a datum of an inductive type is a
 function that takes one continuation per constructor and applies the
@@ -302,9 +319,13 @@ For example, $\langle K\rangle$ applied to four distinct atoms
 $X_1\,X_2\,X_3\,X_4$ reduces to $X_2$, and $\langle I\,K\rangle$ applied
 to the same four reduces to $X_4\,\langle I\rangle\,\langle K\rangle$.
 Bracket-abstracted into $\{S,K,I\}$, the encodings are closed
-combinators: $\langle K\rangle$ is the five atoms $K\,(S\,(K\,K)\,K)$;
-$\langle I\rangle$ is $K\,(K\,K)$; $\langle S\rangle$ is
-$S\,(K\,K)\,(S\,(K\,K)\,K)$; and $\langle I\,K\rangle$ is a 40-atom term
+combinators:
+\begin{align*}
+\langle K\rangle & \mapsto K\,(S\,(K\,K)\,K)\text{;} \\
+\langle I\rangle & \mapsto K\,(K\,K)\text{; and} \\
+\langle S\rangle & \mapsto S\,(K\,K)\,(S\,(K\,K)\,K)\text{.}
+\end{align*}
+$\langle I\,K\rangle$ is a 40-atom term
 which bears some discussion.  The bracket abstraction of
 $\langle I\,K\rangle = \lambda s.\lambda k.\lambda i.\lambda z.\;z\,\langle I\rangle\,\langle K\rangle$
 reads as three components applied together: the application
@@ -313,14 +334,14 @@ i.\lambda z.\;z\,t\,u$, 32 atoms, applied to $\langle I\rangle$ and then
 to $\langle K\rangle$. Within the constructor, the three leading prefixes
 $S\,(K\,(S\,(K\,K)))$ are the abstraction pushing the three unused
 binders $s$, $k$, $i$ past the body, and the inner part applies $z$ to
-$t$ and $u$. Written out, with line breaks carrying no meaning,
+$t$ and $u$. Written out (with line breaks carrying no meaning),
 \begin{verbatim}
 S (K (S (K K))) (S (K (S (K K))) (S (K (S (K K)))
   (S (S (K S) (S (K K) (S (K S) (S (K (S I)) K)))) (K K))))
 (K (K K))
 (K (S (K K) K))
 \end{verbatim}
-where the first two lines are $\text{encA}$, the third is
+where the first two lines are \texttt{encA}, the third is
 $\langle I\rangle$, and the fourth is $\langle K\rangle$; the term is
 drawn in Figure~\ref{fig:uqik}. Applied to any four terms, it hands
 $K\,(K\,K)$ and $K\,(S\,(K\,K)\,K)$ to the fourth of them.
@@ -342,9 +363,10 @@ are written with named binders and expanded to a closed $\{S,K,I\}$ term
 by bracket abstraction, with recursion through the fixpoint combinator
 $Y$. The constructed interpreter, called \texttt{whnfF}, consists of a
 618-atom term; its unquoter \texttt{UQ}, which maps encoded data back to
-a live term, contains 43 atoms.  \texttt{whnfF} is given in full in
-Appendix~\ref{app:expr} and depicted graphically in
-Figure~\ref{fig:whnff}, with its components in Figure~\ref{fig:parts}.
+a live term, contains 43 atoms.  The components of \texttt{whnfF} are
+given in Figure~\ref{fig:parts}, with the full term given in
+Appendix~\ref{app:artifact} and depicted graphically in
+Figure~\ref{fig:whnff}.
 An evaluation is illustrated in Figure~\ref{fig:mechanism}.
 
 \texttt{whnfF} defines a fueled interpreter that evaluates encoded terms to
@@ -377,6 +399,8 @@ edges are green and argument edges blue; $S$ is a filled circle, $K$ a
 square, $I$ a ring. Each panel is scaled to its frame, so sizes are not
 comparable across panels. The $S$ arm is substantially larger because it
 builds $\langle x\,z\,(y\,z)\rangle$ as data.}
+\Description{The interpreter's components as terms, showing the spine
+walker, rebuilder, step arms, and unquoter, with every atom drawn.}
 \label{fig:parts}
 \end{figure}
 
@@ -391,6 +415,9 @@ arguments, returning \texttt{just $\langle t'\rangle$} to the loop; an
 unsaturated head returns \texttt{just $\langle t\rangle$}, the value;
 exhausted fuel returns \texttt{nothing}. The dashed fifth arm optionally
 contains an authored site (\S\ref{sec:authored}).}
+\Description{The \texttt{whnfF} evaluation process, showing the fuel
+loop, spine walker, dispatch, step arms, rebuilder, and the fifth arm
+with an authored site.}
 \label{fig:mechanism}
 \end{figure}
 
@@ -407,7 +434,7 @@ takes 91,556 steps. Run over an encoding of itself running on $\langle I\,K\rang
 as a tower, it reaches weak head normal form in 504,930 contractions
 with the correct value. Empirically for this case, layer one costs 340
 contractions to emulate one, and layer two costs about 1,485 times layer
-one, the ordinary per-level overhead of naive self-interpretation.
+one, the ordinary per-level overhead of na\"{i}ve self-interpretation.
 Figure~\ref{fig:motion} shows the first run in progress and
 Figure~\ref{fig:whnff} the interpreter as a term.
 
@@ -427,6 +454,8 @@ the global shape, which is what changes as the interpreter runs: the
 spine curls as $Y$ unfolds and the encoded term is walked; the tree
 reaches about 111,000 atoms at step 300 and collapses to the answer,
 \texttt{just $\langle$K$\rangle$}, at step 340.}
+\Description{The interpreter running \texttt{whnfF 3 $\langle$I K$\rangle$},
+showing the spiral view at various stages of host contractions.}
 \label{fig:motion}
 \end{figure}
 
@@ -437,8 +466,10 @@ reaches about 111,000 atoms at step 300 and collapses to the answer,
 (Figure~\ref{fig:motion}), whose pruning leaves 48 of the 618 atoms
 visible. Right, the every-atom disc (Figure~\ref{fig:parts}), 48 levels
 deep, in which each fern-like arm is one deeply nested argument as
-produced by bracket abstraction. Appendix~\ref{app:expr} gives the term
+produced by bracket abstraction. Appendix~\ref{app:artifact} gives the term
 in full.}
+\Description{The interpreter \texttt{whnfF} in both views, showing the
+spiral view with pruning and the every-atom disc view.}
 \label{fig:whnff}
 \end{figure}
 
@@ -470,9 +501,9 @@ that $S$ and $K$ are distinct normal forms.
 
 Thus the encoder is a (better, \emph{the only}) host function.  Quotation is
 a one-time cost which must be paid to enter the representation.
-Everything on the other side of the boundary, the unquoter, the
+Everything on the other side of the boundary---the unquoter, the
 interpreter, their self-application, and the lookup machinery of
-\S\ref{sec:scry} including equality on encoded paths, is ordinary
+\S\ref{sec:scry} including equality on encoded paths---is ordinary
 $\{S,K,I\}$. Figure~\ref{fig:uqik} shows the decoder beside a datum:
 in this calculus they are the same kind of thing.
 
@@ -484,6 +515,9 @@ encoding $\langle I\,K\rangle$ of the two-atom term $I\,K$, 40 atoms, each
 in spiral and every-atom views. A datum and a program look alike because
 they are the same kind of thing; only the encoding step that produced
 $\langle I\,K\rangle$ lies outside the calculus.}
+\Description{The decoder and a datum, showing the Scott encoding of a
+two-atom term and its representation in both spiral and every-atom
+views.}
 \label{fig:uqik}
 \end{figure}
 
@@ -568,9 +602,9 @@ lacks them natively.
 \subsection{Fuel and the third outcome}\label{sec:fuel}
 
 An unfueled interpreter's outcome space is $\{\text{value},
-\bot\}$, and divergence cannot be observed from inside a
-finite run. Fuel converts it to $\{\text{value}, \text{timeout}\}$,
-which are both observable. Such limitation is local and carries a clear
+\bot\}$. Divergence cannot be observed from inside a
+finite run, as fuel converts it to the observable set $\{\text{value},
+\text{timeout}\}$. The limitation is local and bears a clear
 price: at fixed fuel $k$, one observation does not separate a divergent
 term from one that needs more than $k$ steps. $\Omega$ times out at
 every $k$; $I^{31}K$ times out for $k \le 31$ and yields a value from
@@ -582,31 +616,32 @@ interpreter exactly as under host reduction because the object-level $K$
 rule fires before the interpreter recurses into the argument.  (This
 follows \citeauthor{Reynolds1972}'s observation.)
 
-The off-by-one is not an artefact of how the loop was written; it is
-forced, and the interpreter's specification can be stated in terms of
-it.  Write $M \Downarrow_n N$ when the closed term $M$ reaches the weak
+The off-by-one factor is an artifact of the interpreter's specification:
+write $M \Downarrow_n N$ when the closed term $M$ reaches the weak
 head normal form $N$ in exactly $n$ normal-order contractions, and $M
 \Uparrow$ when it has no weak head normal form.
 
 \begin{lemma}[step adequacy]\label{lem:step}
 Let $M$ be closed over $\{S,K,I\}$.  If $M$ is in weak head normal form
 then \emph{\texttt{step}} $\langle M\rangle \twoheadrightarrow$
-\emph{\texttt{nothing}}.  Otherwise $M$ has a unique leftmost redex, and
-if $M \to_1 M'$ is its contraction then \emph{\texttt{step}} $\langle
+\emph{\texttt{nothing}}.  Otherwise $M$ has a head redex, and if
+\mbox{$M \to_1 M'$} contracts it then \emph{\texttt{step}} $\langle
 M\rangle \twoheadrightarrow$ \emph{\texttt{just}} $\langle M'\rangle$.
 \end{lemma}
 
 \begin{proof}
 The spine walker \texttt{sp} decomposes $\langle M \rangle$ into a head
-leaf and an argument list, which is total on encoded terms and mirrors
-the host's own decomposition.  Selection on the head leaf reaches
-exactly one step arm.  Each arm tests whether the argument list holds
-the arity its rule requires, returning \texttt{nothing} when it does
-not --- which is precisely the case where $M$ is in weak head normal
-form, since a term is in weak head normal form iff its head leaf is
-unsaturated.  When the arity is present the arm applies its rule to the
-first arguments and rebuilds the spine over the remainder with
-\texttt{rb}, which is the leftmost contraction.
+leaf and an argument list.  It recurses only on the application
+constructor, so it terminates on every encoded term, and it decomposes
+exactly as the host does.  The head leaf then selects one of the three
+step arms, and that arm peels the argument list to the arity its rule
+requires.  Since a term is in weak head normal form iff its head leaf is
+unsaturated, the arm finds too few arguments precisely when $M$ is in
+weak head normal form; there it returns \texttt{nothing}, which is the
+first case.  Otherwise the arity is present, the arm applies its rule to
+those arguments, and \texttt{rb} rebuilds the spine over the remainder.
+That result contracts the head redex, which is the leftmost one, and
+gives the second case.
 \end{proof}
 
 \begin{theorem}[fuel adequacy]\label{thm:fuel}
@@ -615,8 +650,8 @@ Let $M$ be closed over $\{S,K,I\}$ and let $k \in \NN$.
 \item If $M \Downarrow_n N$ and $n < k$, then \emph{\texttt{whnfF}}
   $\langle k\rangle\,\langle M\rangle \twoheadrightarrow$
   \emph{\texttt{just}} $\langle N\rangle$.
-\item Otherwise --- if $M \Uparrow$, or $M \Downarrow_n N$ with $n \ge
-  k$ --- then \emph{\texttt{whnfF}} $\langle k\rangle\,\langle M\rangle
+\item Otherwise if $M \Uparrow$ or $M \Downarrow_n N$ with $n \ge
+  k$, then \emph{\texttt{whnfF}} $\langle k\rangle\,\langle M\rangle
   \twoheadrightarrow$ \emph{\texttt{nothing}}.
 \end{enumerate}
 \end{theorem}
@@ -640,18 +675,22 @@ hypothesis applies: $M \Downarrow_n N$ iff $M' \Downarrow_{n-1} N$, and
 $n < j+1$ iff $n-1 < j$.
 \end{proof}
 
-Three consequences are worth naming, because the rest of the paper uses
-all of them.  The least adequate budget for a converging $M$ is exactly
-$n+1$, one unit per contraction and one for the no-redex check that
-establishes the answer is final; the outcome is monotone in $k$, so a
-value once obtained is never withdrawn by more fuel; and the value is
-independent of $k$, so the interpreter's answer is a function of $M$
-alone and fuel is a resource bound rather than a parameter of the
-semantics.  Monotonicity is what makes searching for a budget by
-doubling sound.  The theorem also fixes the sense in which fuel is
+We now state three consequences of these theorems.
+First, the least adequate budget for a converging $M$ is exactly $n+1$:
+one unit per contraction, and one for the no-redex check that
+establishes the answer is final.  Second, the outcome is monotone in
+$k$, so a value once obtained is never withdrawn by more fuel --- which
+is what makes searching for a budget by doubling sound.  Third, the
+value is independent of $k$, so the interpreter's answer is a function
+of $M$ alone and fuel is a resource bound rather than a parameter of the
+semantics.  The theorems also fix the sense in which fuel is
 \emph{not} neutral: $n$ counts object contractions, and the host
 contractions the interpreter spends to simulate them are a separate
 quantity, measured in \S\ref{sec:census}.
+
+Note that fuel removes the interpreter's own divergence, not the object
+language's; \S\ref{sec:site} shows that an authored arm may
+reintroduce $\bot$ deliberately.
 
 \subsection{The site}\label{sec:site}
 
@@ -682,7 +721,7 @@ different terms are summarized in Table~\ref{tab:behavior}.
 \begin{table}[tb]
 \centering
 \caption{Behavior of the two interpreters on selected object terms.
-The outcome ``host diverges'' refers to the step cap of the host reducer
+The outcome ``host diverges'' refers to the host reducer's step cap
 being reached, not a detected non-termination generally; the arm is
 $\Omega$.}
 \label{tab:behavior}
@@ -715,8 +754,8 @@ is taken in code the two share, so by induction on the number of steps
 the two sequences of intermediate terms coincide; by
 Theorem~\ref{thm:fuel} the outcome is a function of that sequence and
 the budget.  The hypothesis may be taken of either interpreter, since up
-to the first occurrence of $\ell$ in head position --- if there is one
---- the two runs are the same run.
+to the first occurrence of $\ell$ in head position---if there is
+one---the two runs are the same run.
 \end{proof}
 
 Taking $\ell = \texttt{Err}$ and the two arms of \S\ref{sec:site} gives
@@ -727,9 +766,10 @@ about the interpreter.
 
 The \texttt{K I Err} row of Table~\ref{tab:behavior} refers to an
 instance in which \texttt{Err} is present but discarded by object-level
-laziness before it is ever in head position. Here it highlights that the
-addition of a constructor does not by itself introduce a new meaning.
-The meaning is authored downstream by the author of the interpreter.
+laziness before it is ever in head position. Here it obliquely
+highlights that the addition of a constructor does not by itself
+introduce a new meaning:  the meaning is authored downstream by the
+author of the interpreter.
 
 \section{Site as a parameter}\label{sec:scry}
 
@@ -780,14 +820,14 @@ recurs. A path is not a sequence and not an address: it is whatever
 term occupies \texttt{Scry}'s argument position, delivered to the
 resolver as an encoded term, and it bears no meaning to the interpreter
 itself. Its interpretation is entirely the resolver's business. (Nock's
-scry paths are defined as lists of atoms; nothing here depends on that
-shape.)
+scry paths are defined as lists of atoms; nothing here depends on such
+a shape.)
 
 \subsection{A blocking resolver}\label{sec:block}
 
-A resolver that always answers is not a scry because a real lookup can
-fail to answer \emph{yet} for a given path (such as a network call or
-result of a computation). The resolver's type grows from two-way to
+Since a real lookup can fail to answer for a given path (such as a
+network call or the result of a computation), a resolver that always
+answers is not a scry. Thus the resolver's type grows from two-way to
 three-way (\texttt{oJust}, \texttt{oNothing}, \texttt{oNotYet}) and the
 interpreter's outcome types grow to match, adding \texttt{pending} at the
 step level and \texttt{block} at the result level. The arm gains one
@@ -800,13 +840,12 @@ D("stepScN1", ["e","p","rest"], A(v("e"), v("p"),
 \end{verbatim}
 The difference against the synchronous arm above is the third line.
 This is the outcome-type growth of \S\ref{sec:authored} again, triggered
-deliberately by our own extension and legible in the same way: one
-continuation at one site.
+legibly as one continuation at one site.
 
 Resuming a block captures no continuation. Because reduction is pure and
 deterministic, the driver re-runs the whole term from the top under a
-resolver that now also answers the missing fact. Two conditions make
-that sound. The re-run's steps strictly before the block are identical
+resolver that now also answers the missing fact. This is sound because
+the re-run's steps strictly before the block are identical
 to the first run's only if the new resolver agrees with the old one on
 every path the old one answered, which holds because the namespace is
 append-only. Re-running is not fuel-neutral: each round replays the
@@ -815,17 +854,17 @@ budget a block can become a timeout on the next round. Recomputation is
 charged for. The interpreter and each round's resolver are closed
 $\{S,K,I\}$ terms; the host side provides the fact table standing in for
 an external source of truth, the resume loop, and the detection of a
-path with no fact.  (This starts to gesture towards a runtime handler
-which facilitates $SKI$ evaluation in the context of blockable
-computations.)
+path with no fact.  (This gestures towards a desideratum of a host
+handler which can facilitate $SKI$ evaluation in the context of
+blockable computations.)
 
 The namespace is accumulative. With an empty namespace and facts $S
-\mapsto \texttt{Scry}\ K$, $K \mapsto I$, the term \texttt{Scry S}
+\mapsto \texttt{Scry}\ K$, \mbox{$K \mapsto I$}, the term \texttt{Scry S}
 blocks on $S$, learns it, re-runs, and the newly substituted
-\texttt{Scry K} blocks on $K$, a fact forced by the result of resolving
+\texttt{Scry K} blocks on $K$, forced by the result of resolving
 the first, before the third round reaches the value $I$. A path with no
 fact blocks into a distinguishable stuck state, and fuel exhaustion
-remains distinguishable from a block throughout.
+remains distinguishable from a block.
 
 \subsection{Compound paths}\label{sec:paths}
 
@@ -834,11 +873,11 @@ and cannot tell $S\,K$ from $S\,K\,K$. Proposition~\ref{prop:quote} does
 not force this, as that theorem concerns factorising \emph{live}
 combinators. The path a resolver receives is Scott-encoded \emph{data},
 a tree with five leaf tags, and equality on such data is an ordinary
-structural recursion. \citeauthor{JayGivenWilson2011} said as much:
+structural recursion. As \citeauthor{JayGivenWilson2011} said,
 once a term is encoded, factorisation ``is a routine list operation''.
 However, $SK$ cannot produce the encoding from a live term.
 
-We build \texttt{EQ5}, a structural equality test over the
+\texttt{EQ5} is introduced as a structural equality test over the
 five-constructor encoding (Figure~\ref{fig:eq5}); and a resolver that
 compares the incoming path $p$ against each known path in turn,
 \[
@@ -859,6 +898,8 @@ then to $I$ in three rounds; and it refuses a false hit, blocking on
 \caption{\texttt{EQ5}, structural equality on encoded paths, 240 atoms:
 92 $S$, 118 $K$, 30 $I$. Spiral view, 68 atoms visible, beside the
 every-atom disc.}
+\Description{Structural equality on encoded paths, showing the spiral
+view and every-atom disc.}
 \label{fig:eq5}
 \end{figure}
 
@@ -871,18 +912,27 @@ $SKI$; normalizing the path under fuel before lookup would be a fueled
 approximation thereto and would reintroduce the third outcome inside
 path resolution.
 
-\section{Discussion: virtualization and \texttt{+mock}}\label{sec:mock}
+\section{Virtualization and Nock}\label{sec:mock}
 
-Nock's virtualized interpreter \texttt{+mock} is interesting not because
+The Nock combinator calculus consists of a small set of primitive
+operations on nouns, which are the fundamental data structures in Nock.
+The details of Nock's construction are beyond the scope of this paper,
+but they can be found in the specification \citep{Nock4K}.  We are
+primarily interested in Nock due to its virtualization properties and
+the insights it provides into self-interpretation and substitution
+mechanisms.
+
+Nock's virtualized interpreter \texttt{+mock} is interesting less because
 Nock can interpret Nock; that follows once a formula computes
-\texttt{nock}, since a formula already is a noun. Its interest lies
-instead in that a formula can be run through a \emph{substituted}
-interpreter, one that resolves a scry differently or catches a crash
-and returns it as a value, while agreement with the reference
-interpreter holds wherever the substitution is not exercised, and the
-substitution is confined to a named site. Read that way,
-\S\ref{sec:authored} is the $SKI$ analogue of Nock virtualization
-(rather than the tower of \S\ref{sec:tower}). The tower demonstrates
+\texttt{nock}, since a formula already is a noun.; but
+instead in that a formula can be run through a
+\emph{substituted} interpreter. Such an interpreter resolves a scry
+differently or catches a crash and returns it as a value, while
+agreement with the reference interpreter holds wherever the
+substitution is not exercised,
+and the substitution is confined to a named site. Read in this way,
+\S\ref{sec:authored} is the $SKI$ analogue of Nock virtualization.
+The tower demonstrates
 self-interpretation and fidelity, and a general version of that
 demonstration exists for value-producing towers
 \citep[Props.~4.2 and~4.6]{AminRompf2018}. The two arms demonstrate
@@ -897,25 +947,27 @@ The analogy with Nock breaks at quotation. \texttt{+mock} never needs
 a quoting step, because a Nock formula already is the noun handed to
 the alternate interpreter. $SKI$ is not homoiconic: $S$, $K$, $I$ are
 opaque, and Proposition~\ref{prop:quote} states that no $SKI$ term
-can turn an arbitrary $SKI$ term into data about itself. $SKI$-in-$SKI$
+can turn an arbitrary $SKI$ term into data about itself. $SKI$-on-$SKI$
 is therefore not symmetric the way Nock-on-Nock is. There is one
 unavoidable non-$SKI$ quoting step, and virtualization is native only
 above that boundary and closed under further quoting.
 
-Depth is bounded for the ordinary reason. Two levels already cost
+Depth is bounded for an ordinary reason. Two levels already cost
 504,930 contractions against a trivial base term, at roughly $10^3$
 per level; a third level was not attempted in this research program.
 (Nock-on-Nock virtualization has the same character, which is why
 runtime-matched accelerated code exists for Nock as a practical
-instruction set architecture.)
+instruction set architecture.  Notably, the reference runtime
+interpreter for Nock actually implements \texttt{+mock} and treats
+base Nock as a subset special case.)
 
 \section{Conclusion and open problems}\label{sec:open}
 
 An interpreter that is an ordinary term of the calculus it interprets
-makes the authorship of meaning visible: a new symbol's semantics is a
+makes the authorship of introduced meaning visible: a new symbol's semantics is a
 few atoms at one site, provably isolated from everything else; that
 same site made into a parameter furnishes a namespace. Our construction
-is small enough to be read whole (Appendix~\ref{app:expr}) and cheap
+is small enough to be read whole (if by the superhuman; Appendix~\ref{app:artifact}) and cheap
 enough to extend, and several open research questions follow therefrom:
 
 \begin{itemize}[nosep]
@@ -926,8 +978,8 @@ enough to extend, and several open research questions follow therefrom:
   program with every dispatch before the first lookup executed away,
   Futamura's first projection in its weakest form. The static prefix is
   saved exactly; what remains after the first dynamic dependency is the
-  interpreter's own continuation, and removing it requires unfolding
-  under an unknown head, which is a separate project.
+  interpreter's continuation, and removal requires unfolding
+  under an unknown head, which would be a separate project.
 \item \emph{Quotation above level 0.} Proposition~\ref{prop:quote} bars
   quotation of live terms only. Re-encoding an already-encoded term,
   $\langle t\rangle \mapsto \langle\langle t\rangle\rangle$, is a data
@@ -954,30 +1006,32 @@ enough to extend, and several open research questions follow therefrom:
 \end{itemize}
 While $SKI$-on-$SKI$ metacircular interpretation is hardly efficient,
 the development of a toolkit of reusable components and abstractions for
-$SKI$-on-$SKI$ interpretation affords a promising structure for future
-exploration of combinator-based computing.
+$SKI$-based metacircular interpretation affords a promising structure
+for the future exploration of combinator-based computing.
 
 \section*{Data availability statement}
 
-TODO
-
+A repository containing the scripts and harnesses used to produce the
+results in this paper is available at
+\url{https://github.com/sigilante/artifact-metacircular-ski}.
 Every count in this paper is reproducible from the harnesses in the
 artifact repository: \texttt{tower\_harness.py} for T0, T1 and T2,
 \texttt{scry\_harness.py} and \texttt{scry\_namespace.py} for the
 blocking interpreters, and \texttt{scry\_paths.py} for the compound-path
-equality.  They require only \texttt{aviary-kernel}, and the two
+equality.  They require only the Python package \texttt{aviary-kernel},
+and the two
 notebooks recompute the 618-atom interpreter, the 43-atom unquoter and
 the 504,930-contraction self-application from source.
 
-The interpreter of this paper is also the conformance target of a
-surface language, \texttt{skijack}, distributed separately.  Its
-compiler emits the same term: \texttt{whnfF} written as twenty ordinary
-equations and compiled with no generated forms is byte-identical to the
-618 atoms printed in Appendix~\ref{app:expr}, and the pair of
-\S\ref{sec:authored} compiles to 768 and 771 atoms likewise.  That two
-independently written front ends --- a definitional layer here, a
-compiler there --- arrive at the same closed term is the strongest
-evidence we can offer that the artifact is what this paper says it is.
+% The interpreter of this paper is also the conformance target of a
+% surface language, \texttt{skijack}, distributed separately.  Its
+% compiler emits the same term: \texttt{whnfF} written as twenty ordinary
+% equations and compiled with no generated forms is byte-identical to the
+% 618 atoms printed in Appendix~\ref{app:artifact}, and the pair of
+% \S\ref{sec:authored} compiles to 768 and 771 atoms likewise.  That two
+% independently written front ends --- a definitional layer here, a
+% compiler there --- arrive at the same closed term is the strongest
+% evidence we can offer that the artifact is what this paper says it is.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{mss}
@@ -1042,9 +1096,9 @@ Application is juxtaposition and associates to the left; parentheses
 appear only where association is to the right; line breaks fall at
 spaces and carry no meaning. Both are exactly what bracket abstraction
 produces from the named definitions, so their atom counts are
-algorithm-relative in the sense of \S\ref{sec:census}. Both begin with
-the same fourteen atoms, \texttt{S (K (S I I)) (S (S (K S) K) (K (S I
-I)))}, which is $Y$: each is a fixpoint of its generator.
+algorithm-relative in the sense of \S\ref{sec:census}. Each is a fixpoint
+of its generator, and thus they begin with the same fourteen atoms, which
+is $Y$:  \mbox{\texttt{S (K (S I I)) (S (S (K S) K) (K (S I I)))}}.
 
 \texttt{UQ}, the unquoter, 43 atoms:
 \begin{verbatim}
