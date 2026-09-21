@@ -67,10 +67,11 @@
 \begin{abstract}
 We author a metacircular self-interpreter for the $SKI$ combinatory
 calculus, explicitly introducing symbols within the object
-language.  This interpreter is represented as a
-closed term of the basis $\{S, K, I\}$ (three leaves plus application) weighing in at 618 atoms,
-which runs on an encoding of itself in 504,930 contractions. Extending
-the object language with a fifth symbol (a leaf with no contraction rule) forces the interpreter's result
+language.  This interpreter is represented as a closed term of the
+basis $\{S, K, I\}$ weighing in at 618 atoms, which runs on an encoding
+of itself in 504,930 contractions. Extending the object language (three
+leaves plus application) with a fifth symbol (a leaf with no
+contraction rule) forces the interpreter's result
 type to grow, and whether the new outcome is exposed as a value or
 absorbed into divergence is decided by a single arm of the interpreter.
 The same site, made a parameter, becomes a nonlocal lookup in the style
@@ -106,7 +107,7 @@ language, crashes, and other exceptional states.
 We construct a symbolic step-evaluator for the $SKI$ combinator calculus
 as a closed term of the basis $\{S,K,I\}$.  This evaluator performs
 symbolic evaluation by repeatedly applying the reduction rules of the
-$SKI$ calculus until a normal form is reached.  Because the interpreter is
+$SKI$ calculus until weak head normal form is reached.  Because the interpreter is
 capable of symbolic representation beyond simply the basis $\{S,K,I\}$,
 we can add in functionality such as handling additional combinators,
 supporting custom reduction strategies, and managing exceptional states
@@ -123,9 +124,11 @@ metacircular evaluation process and its possibilities for simple
 programs.  This paper makes three contributions:
 \begin{enumerate}[nosep]
 \item A self-interpreter for $\{S,K,I\}$ in $\{S,K,I\}$.  This evaluator
-  is a step-evaluator over encoded terms rather than a decoder, together
-  with the structural census that says what each rule of the calculus is
-  bought for (\S\ref{sec:interp}, \S\ref{sec:census}).
+  is a step-evaluator over encoded terms rather than a decoder, with an
+  adequacy theorem for its fueled loop---a budget of $k$ admits exactly
+  the terms reaching weak head normal form in fewer than $k$
+  contractions---together with a structural census (\S\ref{sec:interp},
+  Theorem~\ref{thm:fuel}, \S\ref{sec:census}).
 \item The observation that extending the object language forces the
   interpreter's outcome type to grow, and that the meaning of the new
   outcome is authored at one site, with a lemma that nothing else changes
@@ -922,9 +925,9 @@ primarily interested in Nock due to its virtualization properties and
 the insights it provides into self-interpretation and substitution
 mechanisms.
 
-Nock's virtualized interpreter \texttt{+mock} is interesting less because
-Nock can interpret Nock; that follows once a formula computes
-\texttt{nock}, since a formula already is a noun.; but
+Nock's virtualized interpreter \texttt{+mock} is interesting less
+because Nock can interpret Nock---that follows once a formula computes
+\texttt{nock}, since a formula already is a noun---but
 instead in that a formula can be run through a
 \emph{substituted} interpreter. Such an interpreter resolves a scry
 differently or catches a crash and returns it as a value, while
@@ -967,7 +970,7 @@ An interpreter that is an ordinary term of the calculus it interprets
 makes the authorship of introduced meaning visible: a new symbol's semantics is a
 few atoms at one site, provably isolated from everything else; that
 same site made into a parameter furnishes a namespace. Our construction
-is small enough to be read whole (if by the superhuman; Appendix~\ref{app:artifact}) and cheap
+is small enough to be read whole (Appendix~\ref{app:artifact}) and cheap
 enough to extend, and several open research questions follow therefrom:
 
 \begin{itemize}[nosep]
@@ -992,7 +995,7 @@ enough to extend, and several open research questions follow therefrom:
   host-side only because its facts are compiled into a closure; an
   explicit core convention, a Scott pair of battery and payload in the
   manner of a Nock core, would make a fact an ordinary \texttt{cons} and
-  the whole loop one closed term. That convention, and a subject-oriented
+  the whole loop one closed term. That convention, and a supercombinator
   surface language over it whose compile-time/runtime line for quotation
   is fixed by Proposition~\ref{prop:quote}, are the subject of separate
   work. The semantics of intensional recursion \citep{Kavvos2017} is the
