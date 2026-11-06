@@ -54,3 +54,15 @@ $\langle t\rangle$ back from $t$.  The $38\times$ growth from $h$ to
 $\langle h\rangle$ is the cost of the $\mathit{App}$ constructor at every node,
 and it compounds per level as the tower costs of \S\ref{sec:tower} do.
 
+
+\paragraph{Erratum.}  \S\ref{sec:related} says that, by Jay and Given-Wilson's
+theorem, ``a term cannot discover whether its argument is an application, let
+alone recover its parts''.  That holds \emph{uniformly}: no term does so for
+every argument.  On a finite set of pairwise separable normal terms a term can
+do it exactly; for instance, the lift at \texttt{Bool} sends $K$ to
+$\langle K\rangle$ and $K\,I$ to $\langle K\,I\rangle = \mathit{App}\,\langle
+K\rangle\,\langle I\rangle$.  More generally, a \emph{behavioural} lift (a code
+that behaves as a live argument) exists at \texttt{Bool}~$\to$~\texttt{Bool}
+and provably not at \texttt{Nat}~$\to$~\texttt{Bool} (\texttt{lean-ski},
+\texttt{Ski/LiftBool.lean} and \texttt{Ski/NoLift.lean}, master
+\texttt{d960d8a}).  Proposition~\ref{prop:quote} is unaffected.
