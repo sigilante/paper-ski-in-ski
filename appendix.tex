@@ -1,0 +1,56 @@
+% appendix.tex -- addendum filed 2026-11-06 while the paper is under review.
+% Not \input by mss.tex.  To include it, add \input{appendix} after \appendix.
+% It bears on the open problem "Quotation above level 0" of \S\ref{sec:open}.
+
+\section{Addendum: self-reference above level 0}\label{app:ifix}
+
+The open problem \emph{Quotation above level 0} (\S\ref{sec:open}) asks whether
+re-encoding, $\langle t\rangle \mapsto \langle\langle t\rangle\rangle$, recovers the
+self-quotation of \citet{Jay2016,Jay2017}.  It recovers self-\emph{reference}, and
+it cannot recover self-\emph{quotation}.
+
+Write $R$ for the re-encoder, with $R\,\langle t\rangle \twoheadrightarrow
+\langle\langle t\rangle\rangle$ for every $t$, and $\mathit{App}$ for the object
+type's application constructor, so that $\langle f\,a\rangle = \mathit{App}\,
+\langle f\rangle\,\langle a\rangle$.
+
+\begin{proposition}[Intensional fixed points]\label{prop:ifix}
+For every closed term $g$ over $\{S,K,I\}$ there is a closed term $t$ with
+$t \twoheadrightarrow g\,\langle t\rangle$.  In particular ($g = I$) there is a
+closed term $t$ with $t \twoheadrightarrow \langle t\rangle$: a quine.
+\end{proposition}
+
+\begin{proof}
+Let $h_g = \lambda y.\, g\,(\mathit{App}\;y\;(R\,y))$, compiled by bracket
+abstraction, and $t = h_g\,\langle h_g\rangle$.  Then
+\[
+t \;\twoheadrightarrow\; g\,(\mathit{App}\,\langle h_g\rangle\,(R\,\langle h_g\rangle))
+  \;\twoheadrightarrow\; g\,(\mathit{App}\,\langle h_g\rangle\,\langle\langle h_g\rangle\rangle)
+  \;=\; g\,\langle h_g\,\langle h_g\rangle\rangle \;=\; g\,\langle t\rangle .
+\qedhere\]
+\end{proof}
+
+This is Kleene's second recursion theorem for the calculus, and in the
+terms of \citet{Kavvos2017} it is the intensional fixed-point rule: from any
+$g$ that consumes code, a term that receives its own code.  It does not
+contradict Proposition~\ref{prop:quote}.  The only quotation is
+$\langle h_g\rangle$, the code of a closed term fixed before anything runs (a
+level-0 name in the sense of \S\ref{sec:site}); every later step is $R$ or
+$\mathit{App}$ acting on data.  No step takes a live term to its code, and none
+can.  So the open problem divides.  Self-reference is available from one
+compile-time quotation plus re-encoding.  Self-quotation, a closed $Q$ with
+$Q\,M \twoheadrightarrow \langle M\rangle$, stays excluded at every level.
+
+Proposition~\ref{prop:ifix} is mechanized in the \texttt{lean-ski} repository
+(\url{https://github.com/sigilante/lean-ski}, \texttt{Ski/Ifix.lean}, commit
+\texttt{6c92722}) as \texttt{Ifix.ifix} and \texttt{Ifix.quine}, over that
+repository's Scott encoding (the four-continuation encoding of
+\S\ref{sec:construction}) and its proved re-encoder \texttt{Requote.requote}.
+Both depend only on the axioms \texttt{propext} and \texttt{Quot.sound} and are
+in the repository's axiom gate.  An independent check in Python, with this
+paper's encoding, compiles the quine to $69{,}268$ atoms ($|h| = 1{,}788$,
+$|\langle h\rangle| = 67{,}480$) and needs $2{,}855{,}152$ contractions to read
+$\langle t\rangle$ back from $t$.  The $38\times$ growth from $h$ to
+$\langle h\rangle$ is the cost of the $\mathit{App}$ constructor at every node,
+and it compounds per level as the tower costs of \S\ref{sec:tower} do.
+
